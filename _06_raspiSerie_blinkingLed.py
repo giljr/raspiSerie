@@ -9,7 +9,7 @@
 # Stop: 	CTRL+C
 # Date: 	sept-2016
 # Software: 	2016-05-27-raspian-jessie
-   		Python 2.7.9
+#   		Python 2.7.9
 #---------------------------------------------------------------------------------
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License v3 as published by
