@@ -49,8 +49,11 @@ Thanks for stopping by!
 
 👉 [07](Episode_7/) #raspiSerie - [HOW-TO build a REST on PI in JavaScript](http://jungletronics.blogspot.com/2016/09/how-to-build-rest-on-pi-in-javascript.html)
 
+▫️ Code [1](Episode_7/rpi-webapp-express-master/index.html/) - **index.html** - the HTML page which the browser loads from the Raspberry Pi and uses to render the presentation layer for our application.
 
+▫️ Code [2](Episode_7/rpi-webapp-express-master/myapi.js/) - **myapi.js** - our server-side Javascript code uses the Node and the Express framework to provide simplistic Web server functionality and to expose a RESTful API.
 
+▫️ Code [3](Episode_7/rpi-webapp-express-master/myclient.js/) - **myclient.js** - Javascript code executed in the browser when our HTML page loads. This code implements the AJAX client functionality to call our API and render the results directly in the HTML page.
 
     
 ## License
