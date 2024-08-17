@@ -1,0 +1,223 @@
+Here are 21 Steps:
+
+1- Install NODE - Open up a ssh session on your pi and type:
+
+wget http://nodejs.org/dist/v0.8.21/node-v0.8.21-linux-arm-pi.tar.gz
+
+
+2- type:
+
+cd /usr/local
+
+
+3-type:
+
+sudo tar xzvf ~/node-v0.8.21-linux-arm-pi.tar.gz --strip=1
+
+this will install the node in your pi.
+
+4- type:
+
+node -v  (returns v0.8.21)
+
+5- Type:
+
+npm -v (returns 1.2.11)
+
+This is node package manager, similar to apt-get of rasbian distro.
+
+6- Type:
+
+mkdir myapp
+
+7- type:
+
+cd myapp
+
+8- type
+
+npm init
+install express --save
+install connect --save
+
+will bring a handful of unknown files. but it is better to believe it will work...and it will! believe in ceeb!
+
+9- Now in this exact same directory (~/myapp), type:
+
+sudo nano myapi.js
+
+10 - I used github.com/fatkahawai/rpi-webapp-express page to copy/paste codes - do it too ;)
+
+
+11- Paste corresponding code (myapi.js):
+-------------------------------------------------------------
+/**
+ * myapi.js
+ * 
+ * @version 1.1 - updated for Express 4.x : April 2015
+ *
+ * 
+ * DESCRIPTION:
+ * a "HELLO WORLD" server-side application to demonstrate running a node 
+ * API Appserver on a Raspberry Pi to access IOs
+ * Uses the Express node packages. 
+ * 
+ * 
+ * @throws none
+ * @see nodejs.org
+ * @see express.org
+ * 
+ * @author Robert Drummond
+ * (C) 2013 PINK PELICAN NZ LTD
+ */
+
+var http      = require('http');
+var express   = require('express');
+
+var app       = express();
+
+// dummy input port values for our example
+var inputs = [    { pin: '11', gpio: '17', value: 1 },
+                  { pin: '12', gpio: '18', value: 0 }
+                ];
+
+// ------------------------------------------------------------------------
+// configure Express to serve index.html and any other static pages stored 
+// in the home directory
+app.use(express.static(__dirname));
+
+// Express route for incoming requests for a single input
+app.get('/inputs/:id', function (req, res) {
+  // send an object as a JSON string
+  console.log('id = ' + req.params.id);
+  res.send(inputs[req.params.id]);
+}); // apt.get()
+
+// Express route for incoming requests for a list of all inputs
+app.get('/inputs', function (req, res) {
+  // send an object as a JSON string
+  console.log('all inputs');
+  res.status(200).send(inputs);
+}); // apt.get()
+
+// Express route for any other unrecognised incoming requests
+app.get('*', function (req, res) {
+  res.status(404).send('Unrecognised API call');
+});
+
+// Express route to handle errors
+app.use(function (err, req, res, next) {
+  if (req.xhr) {
+    res.status(500).send('Oops, Something went wrong!');
+  } else {
+    next(err);
+  }
+}); // apt.use()
+
+// ------------------------------------------------------------------------
+// Start Express App Server
+//
+app.listen(3000);
+console.log('App Server is listening on port 3000');
+
+
+-------------------------------------------------------------
+
+12- type:
+
+sudo nano index.html
+
+13 - copy/paste:
+-------------------------------------------------------------
+<!-- web client for a simple server-side application to demonstrate running a node API Appserver on a Raspberry Pi to display I/O values in a web browser -->
+ <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>My Raspbery Pi API server example</title>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        
+        <script src="myclient.js"></script>
+    </head>
+    <body>
+        <H1>My Raspbery Pi API server example</H1>
+        <div id="input"></div>
+    </body>
+</html>
+-------------------------------------------------------------
+
+14 - type:
+
+sudo nano myclient.js
+
+15 - Paste:
+-------------------------------------------------------------
+/**
+ * MYCLIENT.JS
+ * an example of a JSON request - an ajax request which returns a JSON object 
+ * 
+ * When a user browses to http://localhost:3000, index.html is loaded, which then 
+ * loads and executes this code
+ */
+
+window.onload = function () {
+  var url, i;
+
+  for (i = 0; i < 2; i++) {
+    url = document.URL + 'inputs/' + i;
+    $.getJSON(url, function (data) {
+      console.log('API response received');
+      $('#input').append('<p>input gpio port ' + data.gpio + ' on pin ' + data.pin + ' has current value ' + data.value + '</p>');
+    });
+  }
+};
+-------------------------------------------------------------
+
+16 - type:
+
+node myapi.js
+
+You'll see: "App Server is listening on port 3000"
+
+at this time your application is serving your api, named "input" that returns the
+readings dummies your raspiberry pi. Nice restful technology, right?
+
+17- Browsing our page test in the laptop, we have in chrome:
+
+http://192.168.1.101:3000
+
+18 - Returns this page:
+
+My Raspberry PI API server example
+
+input gpio port 17 on pin 11 has current value 1
+input gpio port 18 on pin 12 has current value 0
+
+
+18' - we will test our api to the postman; type:
+
+http://192.168.1.101:3000/inputs/0
+
+
+
+
+19 - You'll get JSON format:
+
+{
+"pin":"11"
+"gpio":"17"
+"value":"1"
+}
+
+
+20 - type:
+
+http://192.168.1.101:3000/inputs/1
+
+21 - You'll get JSON format:
+
+{
+"pin":"12"
+"gpio":"18"
+"value":"0"
+}

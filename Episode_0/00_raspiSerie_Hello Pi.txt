@@ -1,0 +1,65 @@
+1-Install Arduino in Raspian:
+
+sudo apt-get update
+sudo apt-get install arduino
+
+sudo usermod -a -G tty pi
+sudo usermod -a -G dialout pi
+
+--------------------------------
+
+2-Finding the Serial Port:
+
+ls /dev/tty*
+
+--------------------------------
+
+3-Talking in serial:
+
+skecth_1.ino
+------------
+
+void setup() {
+    Serial.begin(9600);
+  }
+void loop() {
+    for (byte n = 0; n < 255; n++) {
+      Serial.write(n);
+      delay(50);
+  }
+}
+
+--------------------------------
+
+4- Digital Output: Lighting Up an LED with Linux’s virtual file system:
+
+echo 25 > /sys/class/gpio/export
+cd /sys/class/gpio/gpio25
+/sys/class/gpio/gpio25
+
+--------------------------------
+
+5- Digital Input: Reading a Button:
+cd /sys/class/gpio/gpio25
+echo 24 > /sys/class/gpio/export
+cd /sys/class/gpio/gpio24
+echo in > direction
+cat value
+
+--------------------------------
+6- Installing and Testing GPIO in Python and Blinking an LED with Python:
+
+skecth_2.py
+-----------
+
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(25, GPIO.OUT)
+while True:
+  GPIO.output(25, GPIO.HIGH)
+  time.sleep(1)
+  GPIO.output(25, GPIO.LOW)
+  time.sleep(1)
+--------------------------------
+
